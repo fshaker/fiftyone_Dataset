@@ -5,10 +5,10 @@ import numpy as np
 import cv2
 
 
-datasets = fo.list_datasets()
-for dataset in datasets:
-    data = fo.load_dataset(dataset)
-    data.delete()
+# datasets = fo.list_datasets()
+# for dataset in datasets:
+#     data = fo.load_dataset(dataset)
+#     data.delete()
 name = "SegmentAnnotate"
 # name = "SegmentAnnotate_test"
 # data = fo.load_dataset(name=name)

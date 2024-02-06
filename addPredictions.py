@@ -42,24 +42,19 @@ def add_predictions(dataset_name, predictions_path, predictions_name):
                     mask = np.zeros((10, 10))
                 elif (mask.shape[0]) == 0 or (mask.shape[1]) == 0:
                     mask = np.zeros((10, 10))
-                # confidence = float(shape['confidence'])
+                confidence = float(shape['confidence'])
                 detections.append(
-                    fo.Detection(label=label, bounding_box=bounding_box, mask=mask))#, confidence=confidence))
+                    fo.Detection(label=label, bounding_box=bounding_box, mask=mask, confidence=confidence))
             sample[predictions_name] = fo.Detections(detections=detections)
             # print("sample after: ",sample)
             sample.save()
 
-if __name__ == "__main__":
-    predictions_pth = r"C:\Users\Admin\Desktop\inference_output_4"
-    print("start")
-    add_predictions(dataset_name="SegmentAnnotate",
-                    # dataset_split="test",
-                    predictions_path=predictions_pth,
-                    predictions_name="mass_detections_224_conf05")
 
-    predictions_pth =  r"C:\Users\Admin\Desktop\inference_output_5"
+if __name__ == "__main__":
+    # predictions_pth =  r"C:\Users\Admin\Documents\VidaMedicals\Codes\BreastCancerDetecton\results\mass_detection_1024_to_512\output\RUN_1_mvitv2_big_giou\inference_output"
+    predictions_pth = r"C:\Users\Admin\Documents\VidaMedicals\Codes\BreastCancerDetecton\results\whole_images\output\RUN_1_mvitv2_big_giou\inference_output_5"
     print("start")
     add_predictions(dataset_name="SegmentAnnotate",
                     # dataset_split="test",
                     predictions_path=predictions_pth,
-                    predictions_name="mass_detections_224_conf07")
+                    predictions_name="mass_detections_whole_image")
