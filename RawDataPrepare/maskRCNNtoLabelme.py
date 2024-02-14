@@ -5,6 +5,7 @@ import os
 from skimage.io import imread
 import json
 from imantics import Mask
+from tkinter import filedialog
 
 # The AI model that is used, finds five classes as numbers: (1, 2, 3, 4, 5). These numbers are indicators of
 # string labels: ("ca", "mass", "ln", "ca16", "ad"). Our code will change the number labels into their corresponding string labels.
@@ -21,19 +22,20 @@ flags = {
             "Extremely Dense": False,
             "BI-RADS 0": False,
             "BI-RADS 1": False,
-            "BI-RADS 2": True,
+            "BI-RADS 2": False,
             "BI-RADS 3": False,
             "BI-RADS 4": False,
             "BI-RADS 4 A": False,
             "BI-RADS 4 B": False,
             "BI-RADS 4 C": False,
             "BI-RADS 5": False,
-            "BI-RADS 6": False,
             "Axillary Lymph Nodes": False
         }
 # annotations_dir = r"C:\Users\Admin\Documents\VidaMedicals\Codes\Datasets\Segment_AI_dataset\inference_output"
-dest_dir = r"C:\Users\Admin\Documents\VidaMedicals\Codes\Datasets\Segment_AI_dataset\images"
-annotations_dir = "../results/tmp/output/RUN_11_configs/inference_output"
+annotations_dir = filedialog.askdirectory(title='Select maskRCNN annotations directory')
+dest_dir = filedialog.askdirectory(title='Where do you want to save the labelMe annotations')
+# dest_dir = r"C:\Users\Admin\Documents\VidaMedicals\Codes\Datasets\Segment_AI_dataset\images"
+# annotations_dir = "../results/tmp/output/RUN_11_configs/inference_output"
 patients = os.listdir(annotations_dir)
 
 for patient in patients:

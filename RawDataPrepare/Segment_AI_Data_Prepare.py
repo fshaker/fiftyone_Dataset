@@ -27,7 +27,7 @@ import cv2
 import os
 import numpy as np
 import shutil
-
+# import pylibjpeg
 
 data_set_names_list_file = r"C:\Users\Admin\Documents\VidaMedicals\Codes\Datasets\Processed_data_info.csv"
 root_path = r"C:\Users\Admin\Documents\VidaMedicals\Codes\Datasets"
@@ -48,16 +48,29 @@ print(patients)
 for patient in patients:
     # For each patient,
     dcm_files = os.listdir(os.path.join(raw_data_folder, patient))
+    print(dcm_files)
     postfix =0
     p_name = ''
     acquisition_date = ''
     p_name_hash = ''
+    p_ID = ''
+    last_date = ''
     for dcm_file in dcm_files:
 
         dcm_content = pydicom.dcmread(os.path.join(raw_data_folder, patient, dcm_file))
         print(dcm_content.PhotometricInterpretation)
-        p_name = str(dcm_content[0x0010, 0x0010].value).replace("^", " ")
+        # print(dcm_content)
+        print(str(dcm_content.PatientName).replace("^", " "))
+        print(dcm_content.PatientID)
+        print(dcm_content.AcquisitionDate)
+        p_name = str(dcm_content.PatientName).replace("^", " ")
+
+        p_ID = str(dcm_content.PatientID)
+        last_date = acquisition_date
         acquisition_date = str(dcm_content.AcquisitionDate)
+        if last_date != acquisition_date and last_date!='':
+            with open(data_set_names_list_file, 'a') as f:
+                f.write(p_name + ',' + p_ID + ',' + acquisition_date + ',' + p_name_hash + '\n')
         h = hashlib.blake2b(digest_size=10)
         h.update(bytes(p_name, 'utf-8'))
         h.update(bytes(acquisition_date, 'utf-8'))
@@ -88,5 +101,5 @@ for patient in patients:
             shutil.copy(source_json_path, os.path.join(annotations_dir, str(p_name_hash), dest_json_file_name))
         # save the name of the patient and the corresponding folder name:
     with open(data_set_names_list_file, 'a') as f:
-        f.write(p_name+ ','+acquisition_date+ ','+ p_name_hash+'\n')
+        f.write(p_name+ ',' + p_ID + ',' +acquisition_date+ ','+ p_name_hash+'\n')
     shutil.move(os.path.join(raw_data_folder, patient), processed_data_folder)
