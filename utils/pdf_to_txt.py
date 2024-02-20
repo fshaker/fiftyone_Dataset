@@ -93,12 +93,12 @@ def get_breast_composition(txt):
         if 'breast composition' in lines[i]:
             break
         i+=1
-    if i < number_of_lines and ('breast composition' in lines[i] or 'breast  composition' in lines[i]):
+    if i < number_of_lines and ('breast' in lines[i] and 'composition' in lines[i]):
         items = lines[i].split(' ')
         k=0
         while items[k] != 'composition':
             k+=1
-        breast_composition = items[k+1].replace(')', '')
+        breast_composition = items[k+1].replace(')', '').replace('.','')
     return breast_composition
     # if i < number_of_lines:
     #     if lines[i].split(" ")[1] == 'Breast'
@@ -109,9 +109,10 @@ def get_birads(txt):
     number_of_lines = len(lines)
     i=0
     bi_rads = ''
+
     while i < number_of_lines and not('BIRADS:' in lines[i]):
         i+=1
-    if i < number_of_lines and ('BIRADS:' in lines[i]):
+    if i < number_of_lines and 'BIRADS:' in lines[i]:
         items = lines[i].split(' ')
         k=0
         while not ('BIRADS:' in items[k]):
@@ -121,9 +122,11 @@ def get_birads(txt):
             bi_rads = items[k].split(':')[1]
             if bi_rads == '':
                 bi_rads = items[k+1]
+
         else:
             bi_rads = items[k+1]
-    return bi_rads.replace(')','')
+
+    return bi_rads.replace(')', '').replace(',','')
 
 
 def greek_to_english_number(greek_number):
@@ -171,6 +174,7 @@ for pdf in pdf_files:
 
     page_obj = pdfReader.pages[0]
     text = page_obj.extract_text()
+    print(text)
     p_name, date = get_name_and_date(text)
     p_name = beautify(p_name)
     # print(p_name)
@@ -178,10 +182,10 @@ for pdf in pdf_files:
     age = get_age(text)
     bi_rads = get_birads(text)
     breast_composition = get_breast_composition(text)
-    print(p_name, bi_rads)
+    # print(p_name, bi_rads)
     # print(p_name, date, age)
 
     # print(text)
     # print("============================================================")
-    file.write(p_name + ',' + age + ',' + breast_composition + ',' + (greek_to_english_number(bi_rads)) + '\n')
+    file.write(p_name + ',' + age + ',' + breast_composition + ',' + greek_to_english_number(bi_rads) + '\n')
 file.close()

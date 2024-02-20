@@ -56,6 +56,7 @@ for patient in patients:
     p_ID = ''
     last_date = ''
     for dcm_file in dcm_files:
+        if '.' in dcm_file: continue
 
         dcm_content = pydicom.dcmread(os.path.join(raw_data_folder, patient, dcm_file))
         print(dcm_content.PhotometricInterpretation)
@@ -93,7 +94,8 @@ for patient in patients:
         image_name = str(p_name_hash) + '_' + laterality + '_' + str(postfix) + '.png'
         image_path = os.path.join(Prepared_data_dir, str(p_name_hash), image_name)
         cv2.imwrite(image_path, img_pixel)
-        source_json_path = dcm_file.split('.')[0] + '.json'
+        # source_json_path = dcm_file.split('.')[0] + '.json'
+        source_json_path = os.path.join(raw_data_folder, patient, dcm_file+'.json')
         if os.path.exists(source_json_path):
             dest_json_file_name = image_name.split('.')[0]+'.json'
             if not os.path.exists(os.path.join(annotations_dir, str(p_name_hash))):

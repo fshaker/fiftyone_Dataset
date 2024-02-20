@@ -8,6 +8,8 @@ import cv2
 import PIL.Image
 from PIL.Image import Image, fromarray
 from imantics import Mask
+from matplotlib import pyplot as plt
+
 
 def merge_annotations(labelme_annos, yolo_annos):
     annotations = copy.deepcopy(labelme_annos)
@@ -19,16 +21,14 @@ def merge_annotations(labelme_annos, yolo_annos):
         if shape['label'] == 'mass':
             l_shape = {}
             mask = shape["mask"]
+            bbox = shape["bbox"]
             mask_img = np.array(mask, dtype=np.uint8)
             if mask_img.ndim <2: continue
-            # mask_H, mask_W = mask_img.shape[:2]
-            # cv2.imwrite(yolo_annos['imagePath'].split('.')[0]+'_mask.png', mask_img*255)
-            H, W = yolo_annos["image_shape"]
-            mask_img = cv2.resize(mask_img, (W, H), interpolation=cv2.INTER_NEAREST)
             im_mask = Mask(mask_img)
-            # cv2.imwrite(yolo_annos['imagePath'].split('.')[0]+'_big_mask.png', mask_img*255)
             polygons = im_mask.polygons().points
+
             for polygon in polygons:
+                polygon = polygon + bbox[:2]
                 l_shape["points"] = polygon.tolist()
                 print(polygon.tolist())
                 l_shape["label"] = shape['label']
