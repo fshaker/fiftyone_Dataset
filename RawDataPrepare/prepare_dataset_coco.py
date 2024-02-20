@@ -126,7 +126,13 @@ if __name__ == "__main__":
         "--dataset-dir",
         type=str,
         default=None,
-        help='Path dataset directory'
+        help='Path to dataset directory'
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=None,
+        help='Path to converted dataset directory'
     )
 
     output_dict = {
@@ -173,13 +179,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    output_home_dir = os.path.join("output_dataset")
+    output_home_dir = args.output_dir
+    output_dir = "datasets"
+    images_path = "images"
     os.makedirs(output_home_dir, exist_ok=True)
-
-    output_dir = os.path.join("../datasets")
     os.makedirs(os.path.join(output_home_dir, output_dir), exist_ok=True)
-
-    images_path = os.path.join("images")
     os.makedirs(os.path.join(output_home_dir, output_dir, images_path), exist_ok=True)
 
     for idx, file in enumerate(sorted(glob.glob(os.path.join(args.dataset_dir, '*', '*.json')))):
@@ -226,4 +230,5 @@ if __name__ == "__main__":
                 }
             )
     os.mkdir(os.path.join(output_home_dir, output_dir, "annotations"))
-    open(os.path.join(output_home_dir, output_dir, "annotations", "instances_default.json"), "w").write(json.dumps(output_dict, indent=4))
+    with open(os.path.join(output_home_dir, output_dir, "annotations", "instances_default.json"), "w") as f:
+        json.dump(output_dict, f, sort_keys=False, indent=4)
